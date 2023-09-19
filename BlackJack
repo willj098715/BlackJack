@@ -98,6 +98,9 @@ def play_game():
   get_total()
   while dealer_total < 16:
     dealer_cards.append(random.choice(cards))
+    for i in range(len(dealer_cards)):
+      if dealer_cards[i] == 11 and bust(dealer_cards):
+        dealer_cards[i] = 1
     get_total()
   closest()
   play_again = input("Would you like to play again?\"y\" or \"n\": ").lower()
