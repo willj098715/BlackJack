@@ -1,0 +1,117 @@
+
+
+from replit import clear
+from art import logo
+import random
+
+
+user_cards,dealer_cards = [],[]
+user_total, dealer_total = 0,0
+aces = False
+cards = [1,2,3,4,5,6,7,8,9,10,10,10,10]
+def deal_cards():
+  global user_cards,dealer_cards,cards
+
+  user_cards.append(random.choice(cards))
+  user_cards.append(random.choice(cards))
+  dealer_cards.append(random.choice(cards))
+  dealer_cards.append(random.choice(cards))
+  
+def bust(my_list):
+  total = 0
+  for i in my_list:
+    total += i
+  if total > 21:
+    return True
+  else:
+    return False
+
+def hit():
+  global user_cards,cards
+  another_card = input("Would you like to hit? \"y\" or \"n\": ").lower()
+  while another_card == "y":
+    user_cards.append(random.choice(cards))
+    is_ace()
+    for i in range(len(user_cards)):
+      if user_cards[i] == 11 and bust(user_cards):
+        user_cards[i] = 1
+    if bust(user_cards):
+      print(f"Your cards are:{user_cards}")
+      return
+    else:
+      print(f"Your cards are:{user_cards}")
+      another_card = input("Would you like to hit? \"y\" or \"n\": ").lower()
+  if another_card == "n":
+    return
+
+def is_ace():
+  global user_cards,aces
+  for i in range(len(user_cards)):
+    if user_cards[i] == 1:
+      print(f"Your cards are:{user_cards}")
+      change_card = input("Would you like a 1 or 11?: ")    
+      if change_card == "11":
+        user_cards[i] = 11
+        aces = True
+      
+
+def closest():
+  global user_cards,dealer_cards,user_total,dealer_total
+  get_total()
+  print(f"Dealer's cards were: {dealer_cards}")
+
+  
+
+  if bust(user_cards):
+    print("You lose")
+  elif bust(dealer_cards):
+    print("You win!")
+  elif abs(user_total - 21) ==  abs(dealer_total):
+    print("Draw")
+  elif user_total == 21:
+    print("You win!")
+  elif dealer_total == 21:
+    print("You lose")
+  elif abs(user_total - 21) < abs(dealer_total-21):
+    print("You win!")
+  else:
+    print("You lose")
+
+
+def get_total():
+  global user_cards,dealer_cards,user_total,dealer_total
+  dealer_total = 0
+  user_total = 0
+  for i in user_cards:
+    user_total += i
+  for i in dealer_cards:
+    dealer_total += i
+  
+def play_game():
+  print(logo)
+  global user_cards,dealer_cards,user_total,dealer_total,cards
+  deal_cards()
+  is_ace()
+  print(f"Your cards are:{user_cards}")
+  print(f"Dealers first card is {dealer_cards[0]}")
+  hit()
+  get_total()
+  while dealer_total < 16:
+    dealer_cards.append(random.choice(cards))
+    get_total()
+  closest()
+  play_again = input("Would you like to play again?\"y\" or \"n\": ").lower()
+  if play_again == "y":
+    user_cards = []
+    dealer_cards = []
+    dealer_total = 0
+    user_total = 0
+    clear()
+    play_game()
+  elif play_again == "n":
+    print("Thanks for playing!")
+
+
+
+
+play_game()
